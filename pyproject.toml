@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "misp-mcp"
+version = "0.1.0"
+description = "MCP server for MISP - read-only threat intelligence access"
+readme = "README.md"
+license = "AGPL-3.0-or-later"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp[cli]>=1.0.0",
+    "pymisp>=2.5.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+]
+
+[project.scripts]
+misp-mcp = "misp_mcp.server:main"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
