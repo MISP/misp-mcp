@@ -92,3 +92,5 @@ misp-mcp
 ## License
 
 AGPL-3.0-or-later - same as MISP.
+
+Copyright (C) 2026 Andras Iklody
