@@ -76,6 +76,26 @@ Retrieve a specific event by ID with full details.
 
 ---
 
+#### `list_event_reports`
+
+List analyst-written reports attached to an event.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `event_id` | int | **Required.** Event ID |
+
+---
+
+#### `get_event_report`
+
+Retrieve a specific event report by ID.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `event_report_id` | int | **Required.** Event report ID |
+
+---
+
 ### Attribute Search
 
 #### `search_attributes`
@@ -111,6 +131,45 @@ Retrieve a specific attribute by ID.
 | Parameter | Type | Description |
 |---|---|---|
 | `attribute_id` | int | **Required.** Attribute ID |
+
+---
+
+#### `describe_attribute_types`
+
+Describe valid MISP attribute types and categories.
+
+No parameters.
+
+---
+
+#### `get_attribute_statistics`
+
+Get aggregate attribute statistics by type or category.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `context` | string | `type` or `category` (default: `type`) |
+| `percentage` | bool | Return percentages instead of counts |
+
+---
+
+#### `attribute_exists`
+
+Check whether an attribute exists by ID or UUID.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `attribute_id` | int or string | **Required.** Attribute ID or UUID |
+
+---
+
+#### `get_attribute_by_base64_value`
+
+Retrieve an attribute by its base64-encoded value.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `base64_value` | string | **Required.** Base64-encoded attribute value |
 
 ---
 
@@ -160,6 +219,27 @@ Search tags by name. Tags classify events and attributes using standardised voca
 **Example prompts:**
 - "What TLP tags are available in MISP?"
 - "Search for tags related to ransomware"
+
+---
+
+#### `list_tags`
+
+List all available tags.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `limit` | int | Max results (default: 100) |
+| `page` | int | Page number for pagination |
+
+---
+
+#### `get_tag`
+
+Retrieve a specific tag by ID.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `tag_id` | int | **Required.** Tag ID |
 
 ---
 
@@ -225,6 +305,26 @@ Search within a specific galaxy for individual entries (e.g. specific threat act
 - "Search the threat actor galaxy for APT28"
 - "Find ATT&CK techniques related to credential dumping"
 - "Look up the Emotet malware in MISP galaxies"
+
+---
+
+#### `get_galaxy_cluster`
+
+Retrieve a specific galaxy cluster by ID.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `galaxy_cluster_id` | int | **Required.** Galaxy cluster ID |
+
+---
+
+#### `list_galaxy_clusters`
+
+List all clusters for a specific galaxy.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `galaxy_id` | int | **Required.** Galaxy ID |
 
 ---
 

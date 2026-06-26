@@ -29,6 +29,42 @@ def register(mcp, get_client):
         return result
 
     @mcp.tool()
+    def list_tags(
+        limit: int = 100,
+        page: int = 1,
+    ) -> list[dict]:
+        """List all MISP tags.
+
+        Tags are used to classify and filter events and
+        attributes. This returns tag metadata without applying
+        a search term.
+
+        Args:
+            limit: Max results to return (default 100)
+            page: Page number for pagination
+        """
+        client = get_client()
+        result = client.tags(
+            pythonify=False,
+            limit=limit,
+            page=page,
+        )
+        if isinstance(result, list):
+            return result
+        return [result]
+
+    @mcp.tool()
+    def get_tag(tag_id: int) -> dict:
+        """Get a specific MISP tag by ID.
+
+        Args:
+            tag_id: The tag ID to retrieve
+        """
+        client = get_client()
+        result = client.get_tag(tag_id, pythonify=False)
+        return result
+
+    @mcp.tool()
     def list_taxonomies() -> list[dict]:
         """List all available MISP taxonomies.
 

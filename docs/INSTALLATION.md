@@ -37,6 +37,7 @@ The server requires two environment variables:
 | `MISP_URL` | Yes | — | Full URL of your MISP instance |
 | `MISP_API_KEY` | Yes | — | API authentication key |
 | `MISP_VERIFYCERT` | No | `true` | Verify TLS certificates |
+| `MISP_TIMEOUT` | No | `30` | PyMISP request timeout in seconds |
 
 ### Getting your API key
 
@@ -57,6 +58,7 @@ export MISP_VERIFYCERT=false
 ```bash
 export MISP_URL="https://your-misp-instance"
 export MISP_API_KEY="your-api-key"
+export MISP_TIMEOUT="30"
 misp-mcp
 ```
 
@@ -75,7 +77,8 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
       "command": "misp-mcp",
       "env": {
         "MISP_URL": "https://your-misp-instance",
-        "MISP_API_KEY": "your-api-key"
+        "MISP_API_KEY": "your-api-key",
+        "MISP_TIMEOUT": "30"
       }
     }
   }
@@ -91,7 +94,8 @@ If installed in a virtualenv, use the full path:
       "command": "/path/to/misp-mcp/venv/bin/misp-mcp",
       "env": {
         "MISP_URL": "https://your-misp-instance",
-        "MISP_API_KEY": "your-api-key"
+        "MISP_API_KEY": "your-api-key",
+        "MISP_TIMEOUT": "30"
       }
     }
   }
@@ -109,7 +113,8 @@ Add to your project's `.mcp.json` or global MCP settings:
       "command": "misp-mcp",
       "env": {
         "MISP_URL": "https://your-misp-instance",
-        "MISP_API_KEY": "your-api-key"
+        "MISP_API_KEY": "your-api-key",
+        "MISP_TIMEOUT": "30"
       }
     }
   }

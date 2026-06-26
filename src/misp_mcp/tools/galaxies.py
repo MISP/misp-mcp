@@ -77,3 +77,43 @@ def register(mcp, get_client):
             pythonify=False,
         )
         return result
+
+    @mcp.tool()
+    def get_galaxy_cluster(
+        galaxy_cluster_id: int,
+    ) -> dict:
+        """Get a specific galaxy cluster by ID.
+
+        Clusters are individual galaxy entries, such as a
+        threat actor, malware family, tool, or ATT&CK
+        technique.
+
+        Args:
+            galaxy_cluster_id: The galaxy cluster ID to
+                retrieve
+        """
+        client = get_client()
+        result = client.get_galaxy_cluster(
+            galaxy_cluster_id,
+            pythonify=False,
+        )
+        return result
+
+    @mcp.tool()
+    def list_galaxy_clusters(
+        galaxy_id: int,
+    ) -> list[dict] | dict:
+        """List clusters for a specific MISP galaxy.
+
+        Args:
+            galaxy_id: The galaxy ID whose clusters should be
+                listed
+        """
+        client = get_client()
+        result = client.search_galaxy_clusters(
+            galaxy=galaxy_id,
+            searchall=None,
+            context="all",
+            pythonify=False,
+        )
+        return result

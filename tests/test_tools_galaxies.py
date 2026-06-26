@@ -121,3 +121,38 @@ class TestSearchGalaxyClusters:
             mock_pymisp.search_galaxy_clusters.call_args[1]
         )
         assert call_kwargs["searchall"] is None
+
+
+class TestGetGalaxyCluster:
+    @pytest.mark.asyncio
+    async def test_get_by_id(
+        self, mcp_server, mock_pymisp
+    ):
+        mock_pymisp.get_galaxy_cluster.return_value = (
+            SAMPLE_CLUSTER
+        )
+        await mcp_server.call_tool(
+            "get_galaxy_cluster", {"galaxy_cluster_id": 100}
+        )
+        mock_pymisp.get_galaxy_cluster.assert_called_once_with(
+            100, pythonify=False
+        )
+
+
+class TestListGalaxyClusters:
+    @pytest.mark.asyncio
+    async def test_list_for_galaxy(
+        self, mcp_server, mock_pymisp
+    ):
+        mock_pymisp.search_galaxy_clusters.return_value = [
+            SAMPLE_CLUSTER
+        ]
+        await mcp_server.call_tool(
+            "list_galaxy_clusters", {"galaxy_id": 1}
+        )
+        mock_pymisp.search_galaxy_clusters.assert_called_once_with(
+            galaxy=1,
+            searchall=None,
+            context="all",
+            pythonify=False,
+        )

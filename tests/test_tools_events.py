@@ -52,6 +52,27 @@ SAMPLE_INDEX = [
     },
 ]
 
+SAMPLE_EVENT_REPORT = {
+    "EventReport": {
+        "id": "7",
+        "event_id": "1",
+        "name": "Analyst summary",
+        "content": "Known-good report content",
+    }
+}
+
+SAMPLE_ATTRIBUTE_TYPES = {
+    "result": {
+        "types": ["ip-src", "domain", "sha256"],
+        "categories": ["Network activity"],
+    }
+}
+
+SAMPLE_ATTRIBUTE_STATISTICS = {
+    "ip-src": 12,
+    "domain": 7,
+}
+
 
 class TestSearchEvents:
     @pytest.mark.asyncio
@@ -257,4 +278,96 @@ class TestGetObject:
         )
         mock_pymisp.get_object.assert_called_once_with(
             5, pythonify=False
+        )
+
+
+class TestEventReports:
+    @pytest.mark.asyncio
+    async def test_list_event_reports(
+        self, mcp_server, mock_pymisp
+    ):
+        mock_pymisp.get_event_reports.return_value = [
+            SAMPLE_EVENT_REPORT
+        ]
+        await mcp_server.call_tool(
+            "list_event_reports", {"event_id": 1}
+        )
+        mock_pymisp.get_event_reports.assert_called_once_with(
+            1, pythonify=False
+        )
+
+    @pytest.mark.asyncio
+    async def test_get_event_report(
+        self, mcp_server, mock_pymisp
+    ):
+        mock_pymisp.get_event_report.return_value = (
+            SAMPLE_EVENT_REPORT
+        )
+        await mcp_server.call_tool(
+            "get_event_report", {"event_report_id": 7}
+        )
+        mock_pymisp.get_event_report.assert_called_once_with(
+            7, pythonify=False
+        )
+
+
+class TestAttributeMetadata:
+    @pytest.mark.asyncio
+    async def test_describe_attribute_types(
+        self, mcp_server, mock_pymisp
+    ):
+        mock_pymisp.direct_call.return_value = (
+            SAMPLE_ATTRIBUTE_TYPES
+        )
+        await mcp_server.call_tool(
+            "describe_attribute_types", {}
+        )
+        mock_pymisp.direct_call.assert_called_once_with(
+            "attributes/describeTypes"
+        )
+
+    @pytest.mark.asyncio
+    async def test_get_attribute_statistics(
+        self, mcp_server, mock_pymisp
+    ):
+        mock_pymisp.attributes_statistics.return_value = (
+            SAMPLE_ATTRIBUTE_STATISTICS
+        )
+        await mcp_server.call_tool(
+            "get_attribute_statistics",
+            {"context": "category", "percentage": True},
+        )
+        mock_pymisp.attributes_statistics.assert_called_once_with(
+            context="category",
+            percentage=True,
+        )
+
+    @pytest.mark.asyncio
+    async def test_attribute_exists(
+        self, mcp_server, mock_pymisp
+    ):
+        mock_pymisp.attribute_exists.return_value = True
+        result = await mcp_server.call_tool(
+            "attribute_exists", {"attribute_id": 10}
+        )
+        mock_pymisp.attribute_exists.assert_called_once_with(
+            10
+        )
+        assert result[0][0].text == "true"
+        assert result[1] == {"result": True}
+
+    @pytest.mark.asyncio
+    async def test_get_attribute_by_base64_value(
+        self, mcp_server, mock_pymisp
+    ):
+        mock_pymisp.direct_call.return_value = (
+            SAMPLE_ATTRIBUTE
+        )
+        await mcp_server.call_tool(
+            "get_attribute_by_base64_value",
+            {"base64_value": "ZXhhbXBsZS5jb20="},
+        )
+        mock_pymisp.direct_call.assert_called_once_with(
+            "attributes/getAttributeByB64Value/"
+            "ZXhhbXBsZS5jb20%3D"
         )

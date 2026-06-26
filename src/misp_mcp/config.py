@@ -25,3 +25,18 @@ def get_misp_verifycert() -> bool:
     return os.environ.get(
         "MISP_VERIFYCERT", "true"
     ).lower() in ("true", "1", "yes")
+
+
+def get_misp_timeout() -> int:
+    timeout = os.environ.get("MISP_TIMEOUT", "30")
+    try:
+        parsed_timeout = int(timeout)
+    except ValueError as exc:
+        raise ValueError(
+            "MISP_TIMEOUT must be a positive integer"
+        ) from exc
+    if parsed_timeout <= 0:
+        raise ValueError(
+            "MISP_TIMEOUT must be a positive integer"
+        )
+    return parsed_timeout

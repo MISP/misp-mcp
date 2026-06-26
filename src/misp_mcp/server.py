@@ -5,6 +5,7 @@ from pymisp import PyMISP
 
 from misp_mcp.config import (
     get_misp_api_key,
+    get_misp_timeout,
     get_misp_url,
     get_misp_verifycert,
 )
@@ -34,6 +35,7 @@ def get_client() -> PyMISP:
             url=get_misp_url(),
             key=get_misp_api_key(),
             ssl=get_misp_verifycert(),
+            timeout=get_misp_timeout(),
         )
     return _client
 

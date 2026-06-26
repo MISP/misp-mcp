@@ -1,5 +1,7 @@
 """Event, attribute, and object search tools."""
 
+from urllib.parse import quote
+
 from pymisp import PyMISP
 
 
@@ -361,5 +363,95 @@ def register(mcp, get_client):
         client = get_client()
         result = client.get_object(
             object_id, pythonify=False
+        )
+        return result
+
+    @mcp.tool()
+    def list_event_reports(event_id: int) -> list[dict] | dict:
+        """List event reports attached to a MISP event.
+
+        Event reports contain analyst-written narratives,
+        summaries, and linked report content for an event.
+
+        Args:
+            event_id: Event ID whose reports should be listed
+        """
+        client = get_client()
+        result = client.get_event_reports(
+            event_id, pythonify=False
+        )
+        if isinstance(result, list):
+            return result
+        return result
+
+    @mcp.tool()
+    def get_event_report(event_report_id: int) -> dict:
+        """Get a specific MISP event report by ID.
+
+        Args:
+            event_report_id: Event report ID to retrieve
+        """
+        client = get_client()
+        result = client.get_event_report(
+            event_report_id, pythonify=False
+        )
+        return result
+
+    @mcp.tool()
+    def describe_attribute_types() -> dict:
+        """Describe valid MISP attribute types and categories.
+
+        Use this before constructing searches that depend on
+        MISP attribute type/category names.
+        """
+        client = get_client()
+        result = client.direct_call(
+            "attributes/describeTypes"
+        )
+        return result
+
+    @mcp.tool()
+    def get_attribute_statistics(
+        context: str = "type",
+        percentage: bool = False,
+    ) -> dict | list[dict]:
+        """Get aggregate MISP attribute statistics.
+
+        Args:
+            context: Statistic grouping, either "type" or
+                "category"
+            percentage: Return percentages instead of counts
+        """
+        client = get_client()
+        result = client.attributes_statistics(
+            context=context,
+            percentage=percentage,
+        )
+        return result
+
+    @mcp.tool()
+    def attribute_exists(attribute_id: int | str) -> bool:
+        """Check whether an attribute exists by ID or UUID.
+
+        Args:
+            attribute_id: Attribute ID or UUID to check
+        """
+        client = get_client()
+        return client.attribute_exists(attribute_id)
+
+    @mcp.tool()
+    def get_attribute_by_base64_value(
+        base64_value: str,
+    ) -> dict:
+        """Get an attribute by its base64-encoded value.
+
+        Args:
+            base64_value: Base64-encoded attribute value
+        """
+        client = get_client()
+        encoded_value = quote(base64_value, safe="")
+        result = client.direct_call(
+            "attributes/getAttributeByB64Value/"
+            f"{encoded_value}"
         )
         return result

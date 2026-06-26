@@ -7,6 +7,7 @@ from unittest.mock import patch
 from misp_mcp.config import (
     get_misp_url,
     get_misp_api_key,
+    get_misp_timeout,
     get_misp_verifycert,
 )
 
@@ -72,3 +73,22 @@ class TestGetMispVerifycert:
     def test_defaults_to_true(self):
         with patch.dict(os.environ, {}, clear=True):
             assert get_misp_verifycert() is True
+
+
+class TestGetMispTimeout:
+    def test_returns_timeout_from_env(self):
+        with patch.dict(os.environ, {"MISP_TIMEOUT": "10"}):
+            assert get_misp_timeout() == 10
+
+    def test_defaults_to_30(self):
+        with patch.dict(os.environ, {}, clear=True):
+            assert get_misp_timeout() == 30
+
+    @pytest.mark.parametrize("value", ["0", "-1", "abc"])
+    def test_rejects_invalid_values(self, value):
+        with patch.dict(os.environ, {"MISP_TIMEOUT": value}):
+            with pytest.raises(
+                ValueError,
+                match="MISP_TIMEOUT must be a positive integer",
+            ):
+                get_misp_timeout()

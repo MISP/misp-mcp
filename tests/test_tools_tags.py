@@ -10,6 +10,13 @@ SAMPLE_TAGS = {
     ]
 }
 
+SAMPLE_TAG_LIST = [
+    {"id": "1", "name": "tlp:white"},
+    {"id": "2", "name": "tlp:green"},
+]
+
+SAMPLE_TAG = {"Tag": {"id": "1", "name": "tlp:white"}}
+
 SAMPLE_TAXONOMIES = [
     {"Taxonomy": {"id": "1", "namespace": "tlp"}},
     {
@@ -61,6 +68,48 @@ class TestSearchTags:
             mock_pymisp.search_tags.call_args[1]
         )
         assert call_kwargs["strict_tagname"] is True
+
+
+class TestListTags:
+    @pytest.mark.asyncio
+    async def test_returns_list(
+        self, mcp_server, mock_pymisp
+    ):
+        mock_pymisp.tags.return_value = SAMPLE_TAG_LIST
+        await mcp_server.call_tool("list_tags", {})
+        mock_pymisp.tags.assert_called_once_with(
+            pythonify=False,
+            limit=100,
+            page=1,
+        )
+
+    @pytest.mark.asyncio
+    async def test_uses_pagination(
+        self, mcp_server, mock_pymisp
+    ):
+        mock_pymisp.tags.return_value = SAMPLE_TAG_LIST
+        await mcp_server.call_tool(
+            "list_tags", {"limit": 10, "page": 2}
+        )
+        mock_pymisp.tags.assert_called_once_with(
+            pythonify=False,
+            limit=10,
+            page=2,
+        )
+
+
+class TestGetTag:
+    @pytest.mark.asyncio
+    async def test_get_by_id(
+        self, mcp_server, mock_pymisp
+    ):
+        mock_pymisp.get_tag.return_value = SAMPLE_TAG
+        await mcp_server.call_tool(
+            "get_tag", {"tag_id": 1}
+        )
+        mock_pymisp.get_tag.assert_called_once_with(
+            1, pythonify=False
+        )
 
 
 class TestListTaxonomies:
