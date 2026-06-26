@@ -10,6 +10,7 @@ readme = "README.md"
 license = "AGPL-3.0-or-later"
 requires-python = ">=3.10"
 dependencies = [
+    "fastmcp>=3.4.2",
     "mcp[cli]>=1.0.0",
     "pymisp>=2.5.0",
 ]

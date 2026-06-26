@@ -8,3 +8,4 @@ venv/
 .env
 .pytest_cache/
 *.egg
+misc/*
