@@ -72,3 +72,13 @@ class TestGetMispVerifycert:
     def test_defaults_to_true(self):
         with patch.dict(os.environ, {}, clear=True):
             assert get_misp_verifycert() is True
+
+    def test_returns_path_for_ca_bundle(self):
+        with patch.dict(
+            os.environ,
+            {"MISP_VERIFYCERT": "/etc/ssl/certs/internal-ca.pem"},
+        ):
+            assert (
+                get_misp_verifycert()
+                == "/etc/ssl/certs/internal-ca.pem"
+            )
