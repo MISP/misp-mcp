@@ -21,7 +21,13 @@ def get_misp_api_key() -> str:
     return key
 
 
-def get_misp_verifycert() -> bool:
-    return os.environ.get(
-        "MISP_VERIFYCERT", "true"
-    ).lower() in ("true", "1", "yes")
+def get_misp_verifycert() -> bool | str:
+    value = os.environ.get("MISP_VERIFYCERT", "true")
+    lowered = value.lower()
+    if lowered in ("true", "1", "yes"):
+        return True
+    if lowered in ("false", "0", "no"):
+        return False
+    # Not a recognised boolean: treat it as a path to a CA bundle and
+    # hand it straight to PyMISP, which accepts bool | str for `ssl`.
+    return value

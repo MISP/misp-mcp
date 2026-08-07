@@ -1,10 +1,14 @@
 """Galaxy and galaxy cluster tools."""
 
+from misp_mcp.annotations import READ_ONLY
+from misp_mcp.errors import handle_misp_errors
+
 
 def register(mcp, get_client):
     """Register galaxy tools."""
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
+    @handle_misp_errors
     def search_galaxies(
         value: str,
         with_clusters: bool = False,
@@ -28,7 +32,8 @@ def register(mcp, get_client):
         )
         return result
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
+    @handle_misp_errors
     def get_galaxy(
         galaxy_id: int,
         with_clusters: bool = True,
@@ -51,7 +56,8 @@ def register(mcp, get_client):
         )
         return result
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
+    @handle_misp_errors
     def search_galaxy_clusters(
         galaxy_id: int,
         search_term: str | None = None,

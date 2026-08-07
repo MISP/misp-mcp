@@ -35,7 +35,7 @@ Set the following environment variables:
 |---|---|---|
 | `MISP_URL` | Yes | URL of your MISP instance (e.g. `https://misp.example.com`) |
 | `MISP_API_KEY` | Yes | Your MISP API authentication key |
-| `MISP_VERIFYCERT` | No | Verify TLS certificates (default: `true`) |
+| `MISP_VERIFYCERT` | No | Verify TLS certificates. `true`/`false`, or a path to a CA bundle file to verify against (default: `true`) |
 
 ## Usage
 

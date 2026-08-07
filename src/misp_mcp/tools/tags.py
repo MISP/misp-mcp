@@ -1,10 +1,14 @@
 """Tag and taxonomy tools."""
 
+from misp_mcp.annotations import READ_ONLY
+from misp_mcp.errors import handle_misp_errors
+
 
 def register(mcp, get_client):
     """Register tag and taxonomy tools."""
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
+    @handle_misp_errors
     def search_tags(
         tagname: str,
         strict: bool = False,
@@ -28,7 +32,8 @@ def register(mcp, get_client):
         )
         return result
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
+    @handle_misp_errors
     def list_taxonomies() -> list[dict]:
         """List all available MISP taxonomies.
 
@@ -42,7 +47,8 @@ def register(mcp, get_client):
             return result
         return [result]
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
+    @handle_misp_errors
     def get_taxonomy(taxonomy_id: int) -> dict:
         """Get a specific taxonomy with all its entries.
 
