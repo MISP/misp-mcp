@@ -1,6 +1,8 @@
 """Tests for galaxy tools."""
 
 import pytest
+from unittest.mock import MagicMock
+from pymisp import PyMISP
 
 
 SAMPLE_GALAXY = {
@@ -103,7 +105,7 @@ class TestSearchGalaxyClusters:
         mock_pymisp.search_galaxy_clusters.assert_called_once_with(
             galaxy=1,
             searchall="APT28",
-            context=None,
+            context="all",
             pythonify=False,
         )
 
@@ -121,3 +123,24 @@ class TestSearchGalaxyClusters:
             mock_pymisp.search_galaxy_clusters.call_args[1]
         )
         assert call_kwargs["searchall"] is None
+
+    @pytest.mark.asyncio
+    async def test_default_context_reaches_misp(
+        self, mcp_server, mock_pymisp
+    ):
+        """PyMISP rejects any context outside its allow-list,
+        so drive the real method to prove the default passes.
+        """
+        pymisp_internals = MagicMock()
+        pymisp_internals._check_json_response.return_value = (
+            SAMPLE_CLUSTER
+        )
+        mock_pymisp.search_galaxy_clusters.side_effect = (
+            lambda **kwargs: PyMISP.search_galaxy_clusters(
+                pymisp_internals, **kwargs
+            )
+        )
+        await mcp_server.call_tool(
+            "search_galaxy_clusters", {"galaxy_id": 1}
+        )
+        pymisp_internals._prepare_request.assert_called_once()
