@@ -55,7 +55,7 @@ def register(mcp, get_client):
     def search_galaxy_clusters(
         galaxy_id: int,
         search_term: str | None = None,
-        context: str | None = None,
+        context: str = "all",
     ) -> dict:
         """Search clusters within a specific galaxy.
 
@@ -67,7 +67,8 @@ def register(mcp, get_client):
             galaxy_id: The galaxy ID to search within
             search_term: Text to search for in cluster names,
                 descriptions, and synonyms
-            context: Additional context filter
+            context: Cluster context filter, one of all,
+                default, custom, org, orgc, deleted
         """
         client = get_client()
         result = client.search_galaxy_clusters(
