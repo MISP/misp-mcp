@@ -2,11 +2,14 @@
 
 from pymisp import PyMISP
 
+from misp_mcp.errors import handle_misp_errors
+
 
 def register(mcp, get_client):
     """Register event/attribute/object tools."""
 
     @mcp.tool()
+    @handle_misp_errors()
     def search_events(
         value: str | None = None,
         type_attribute: str | None = None,
@@ -93,6 +96,7 @@ def register(mcp, get_client):
         ]
 
     @mcp.tool()
+    @handle_misp_errors()
     def search_attributes(
         value: str | None = None,
         type_attribute: str | None = None,
@@ -171,6 +175,7 @@ def register(mcp, get_client):
         ]
 
     @mcp.tool()
+    @handle_misp_errors()
     def search_objects(
         value: str | None = None,
         type_attribute: str | None = None,
@@ -226,6 +231,7 @@ def register(mcp, get_client):
         ]
 
     @mcp.tool()
+    @handle_misp_errors()
     def search_event_index(
         eventinfo: str | None = None,
         tags: list[str] | None = None,
@@ -301,6 +307,7 @@ def register(mcp, get_client):
         ]
 
     @mcp.tool()
+    @handle_misp_errors()
     def get_event(
         event_id: int,
         include_correlations: bool = False,
@@ -337,6 +344,7 @@ def register(mcp, get_client):
         return result
 
     @mcp.tool()
+    @handle_misp_errors()
     def get_attribute(attribute_id: int) -> dict:
         """Get a specific MISP attribute by ID.
 
@@ -350,6 +358,7 @@ def register(mcp, get_client):
         return result
 
     @mcp.tool()
+    @handle_misp_errors()
     def get_object(object_id: int) -> dict:
         """Get a specific MISP object by ID.
 

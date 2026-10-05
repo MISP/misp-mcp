@@ -1,5 +1,6 @@
 """Tests for configuration module."""
 
+import logging
 import os
 import pytest
 from unittest.mock import patch
@@ -8,6 +9,10 @@ from misp_mcp.config import (
     get_misp_url,
     get_misp_api_key,
     get_misp_verifycert,
+    get_misp_timeout,
+    get_misp_retries,
+    get_misp_retry_delay,
+    get_misp_log_level,
 )
 
 
@@ -72,3 +77,59 @@ class TestGetMispVerifycert:
     def test_defaults_to_true(self):
         with patch.dict(os.environ, {}, clear=True):
             assert get_misp_verifycert() is True
+
+
+class TestGetMispTimeout:
+    def test_returns_value_from_env(self):
+        with patch.dict(os.environ, {"MISP_TIMEOUT": "60"}):
+            assert get_misp_timeout() == 60
+
+    def test_defaults_to_30(self):
+        with patch.dict(os.environ, {}, clear=True):
+            assert get_misp_timeout() == 30
+
+    def test_invalid_value_falls_back_to_default(self):
+        with patch.dict(os.environ, {"MISP_TIMEOUT": "abc"}):
+            assert get_misp_timeout() == 30
+
+
+class TestGetMispRetries:
+    def test_returns_value_from_env(self):
+        with patch.dict(os.environ, {"MISP_RETRIES": "5"}):
+            assert get_misp_retries() == 5
+
+    def test_defaults_to_3(self):
+        with patch.dict(os.environ, {}, clear=True):
+            assert get_misp_retries() == 3
+
+    def test_invalid_value_falls_back_to_default(self):
+        with patch.dict(os.environ, {"MISP_RETRIES": "xyz"}):
+            assert get_misp_retries() == 3
+
+
+class TestGetMispRetryDelay:
+    def test_returns_value_from_env(self):
+        with patch.dict(os.environ, {"MISP_RETRY_DELAY": "0.5"}):
+            assert get_misp_retry_delay() == 0.5
+
+    def test_defaults_to_1(self):
+        with patch.dict(os.environ, {}, clear=True):
+            assert get_misp_retry_delay() == 1.0
+
+    def test_invalid_value_falls_back_to_default(self):
+        with patch.dict(os.environ, {"MISP_RETRY_DELAY": "oops"}):
+            assert get_misp_retry_delay() == 1.0
+
+
+class TestGetMispLogLevel:
+    def test_returns_value_from_env(self):
+        with patch.dict(os.environ, {"MISP_LOG_LEVEL": "DEBUG"}):
+            assert get_misp_log_level() == logging.DEBUG
+
+    def test_defaults_to_warning(self):
+        with patch.dict(os.environ, {}, clear=True):
+            assert get_misp_log_level() == logging.WARNING
+
+    def test_invalid_value_falls_back_to_warning(self):
+        with patch.dict(os.environ, {"MISP_LOG_LEVEL": "NOPE"}):
+            assert get_misp_log_level() == logging.WARNING

@@ -50,6 +50,7 @@ class TestServerSetup:
 
 class TestClientInitialisation:
     @patch("misp_mcp.server.PyMISP")
+    @patch("misp_mcp.server.get_misp_timeout")
     @patch("misp_mcp.server.get_misp_verifycert")
     @patch("misp_mcp.server.get_misp_api_key")
     @patch("misp_mcp.server.get_misp_url")
@@ -58,6 +59,7 @@ class TestClientInitialisation:
         mock_url,
         mock_key,
         mock_verify,
+        mock_timeout,
         mock_pymisp_cls,
     ):
         import misp_mcp.server as srv
@@ -66,6 +68,7 @@ class TestClientInitialisation:
         mock_url.return_value = "https://misp.test"
         mock_key.return_value = "test-key"
         mock_verify.return_value = False
+        mock_timeout.return_value = 30
 
         client = srv.get_client()
 
@@ -73,6 +76,7 @@ class TestClientInitialisation:
             url="https://misp.test",
             key="test-key",
             ssl=False,
+            timeout=30,
         )
         assert client == mock_pymisp_cls.return_value
         srv._client = None
