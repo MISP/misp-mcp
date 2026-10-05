@@ -1,14 +1,25 @@
 """MISP MCP Server - read-only threat intelligence access."""
 
+import logging
+import sys
+
 from mcp.server.fastmcp import FastMCP
 from pymisp import PyMISP
 
 from misp_mcp.config import (
     get_misp_api_key,
+    get_misp_log_level,
+    get_misp_timeout,
     get_misp_url,
     get_misp_verifycert,
 )
 from misp_mcp.tools import events, feeds, galaxies, tags
+
+logging.basicConfig(
+    level=get_misp_log_level(),
+    format="%(asctime)s %(name)s %(levelname)s %(message)s",
+    stream=sys.stderr,
+)
 
 mcp = FastMCP(
     "MISP",
@@ -34,6 +45,7 @@ def get_client() -> PyMISP:
             url=get_misp_url(),
             key=get_misp_api_key(),
             ssl=get_misp_verifycert(),
+            timeout=get_misp_timeout(),
         )
     return _client
 

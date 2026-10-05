@@ -37,6 +37,10 @@ The server requires two environment variables:
 | `MISP_URL` | Yes | — | Full URL of your MISP instance |
 | `MISP_API_KEY` | Yes | — | API authentication key |
 | `MISP_VERIFYCERT` | No | `true` | Verify TLS certificates |
+| `MISP_TIMEOUT` | No | `30` | HTTP request timeout in seconds |
+| `MISP_RETRIES` | No | `3` | Retries for transient failures (network errors, timeouts, 5xx) |
+| `MISP_RETRY_DELAY` | No | `1.0` | Base delay between retries in seconds (exponential backoff) |
+| `MISP_LOG_LEVEL` | No | `WARNING` | Log level (`DEBUG`, `INFO`, `WARNING`, `ERROR`) |
 
 ### Getting your API key
 

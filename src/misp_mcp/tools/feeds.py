@@ -1,10 +1,13 @@
 """Feed tools."""
 
+from misp_mcp.errors import handle_misp_errors
+
 
 def register(mcp, get_client):
     """Register feed tools."""
 
     @mcp.tool()
+    @handle_misp_errors()
     def search_feeds(
         value: str | None = None,
     ) -> list[dict]:
